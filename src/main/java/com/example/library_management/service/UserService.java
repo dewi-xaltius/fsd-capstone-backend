@@ -5,8 +5,10 @@ import com.example.library_management.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder; // <-- ADD THIS IMPORT
+import com.example.library_management.dto.UserResponse;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -29,16 +31,13 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserResponse> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        // Convert list of User entities to list of UserResponse DTOs
+        return users.stream()
+                    .map(user -> new UserResponse(user.getId(), user.getUsername(), user.getRole()))
+                    .collect(Collectors.toList());
     }
 
-    // You will remove this loginUser method later, but for now, we're only focusing on password hashing
-    public User loginUser(String username, String password, String role) {
-        User user = userRepository.findByUsername(username);
-        if (user == null || !user.getPassword().equals(password) || !user.getRole().equals(role)) {
-            throw new RuntimeException("Invalid username, password, or role");
-        }
-        return user;
-    }
+    
 }

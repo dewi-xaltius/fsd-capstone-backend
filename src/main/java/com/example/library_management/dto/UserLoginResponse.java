@@ -1,16 +1,21 @@
 package com.example.library_management.dto;
 
-// This DTO will hold the information we send back to the frontend after login
 public class UserLoginResponse {
+    private String jwt;
     private String username;
-    private String role; // Frontend expects "MEMBER" or "LIBRARIAN"
+    private String role;
 
-    public UserLoginResponse(String username, String role) {
+    public UserLoginResponse(String jwt, String username, String role) {
+        this.jwt = jwt;
         this.username = username;
         this.role = role;
     }
 
     // Getters
+    public String getJwt() {
+        return jwt;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -19,5 +24,16 @@ public class UserLoginResponse {
         return role;
     }
 
-    // You can add setters if needed, but for a response DTO, getters are often sufficient
+    // Setters (optional, can be removed if not needed)
+    public void setJwt(String jwt) {
+        this.jwt = jwt;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 }

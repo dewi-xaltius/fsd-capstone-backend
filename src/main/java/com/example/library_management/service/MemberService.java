@@ -1,3 +1,4 @@
+// src/main/java/com/example/library_management/service/MemberService.java
 package com.example.library_management.service;
 
 import com.example.library_management.entity.Member;
@@ -50,4 +51,12 @@ public interface MemberService {
      * @return List of members matching the name
      */
     List<Member> searchMembersByName(String name);
+
+    // --- ADD THIS NEW METHOD DECLARATION ---
+    /**
+     * Retrieves a member by the username associated with their user account.
+     * @param username The username of the user whose member details to find
+     * @return The Member entity associated with the given username, or null if not found
+     */
+    Member getMemberByUsername(String username);
 }

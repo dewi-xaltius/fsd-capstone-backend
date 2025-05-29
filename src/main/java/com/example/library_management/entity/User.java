@@ -2,10 +2,18 @@ package com.example.library_management.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.Column;
+import jakarta.persistence.OneToOne; // <-- ADD THIS IMPORT
+import jakarta.persistence.JoinColumn; // <-- ADD THIS IMPORT
+import jakarta.persistence.CascadeType; // <-- ADD THIS IMPORT
+import jakarta.persistence.FetchType; // <-- ADD THIS IMPORT
 
+/**
+ * Represents a user in the library management system,
+ * handling authentication and authorization roles.
+ */
 @Entity
 public class User {
 
@@ -13,25 +21,23 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username", nullable = false, unique = true)
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
 
     @Column(name = "password", nullable = false)
-    private String password;
+    private String password; // Hashed password
 
     @Column(name = "role", nullable = false)
-    private String role;
+    private String role; // e.g., "MEMBER", "LIBRARIAN"
+
+    // Optional: One-to-one relationship with Member entity for MEMBER roles
+    // This assumes a user with role 'MEMBER' will have an associated Member profile
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY) // CascadeType.ALL means if User is deleted, Member is too
+    @JoinColumn(name = "member_id", referencedColumnName = "id") // Foreign key column in 'users' table
+    private Member member; // The associated Member profile for this user
 
     // Default constructor
-    public User() {
-    }
-
-    // Parameterized constructor
-    public User(String username, String password, String role) {
-        this.username = username;
-        this.password = password; // Will hash later with Spring Security
-        this.role = role;
-    }
+    public User() {}
 
     // Getters and Setters
     public Long getId() {
@@ -64,5 +70,14 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    // New getter and setter for the Member relationship
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
     }
 }

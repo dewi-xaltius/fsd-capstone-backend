@@ -5,6 +5,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.OneToOne; // <-- ADD THIS IMPORT
+import jakarta.persistence.MapsId; // <-- ADD THIS IMPORT (if using shared primary key strategy)
+import jakarta.persistence.JoinColumn; // <-- ADD THIS IMPORT (if using foreign key strategy from Member to User)
 import java.time.LocalDate;
 
 /**
@@ -32,6 +35,13 @@ public class Member {
 
     @Column(name = "membership_expiry_date")
     private LocalDate membershipExpiryDate; // Date when membership expires (1 year from registration)
+
+    // Optional: Bidirectional relationship back to User
+    // Use 'mappedBy' to indicate that the 'member_id' column is on the 'User' side.
+    // If you want the Member's ID to be the same as the User's ID, you can use @MapsId
+    // For simplicity, let's keep it optional for now, and manage from User side.
+    // @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    // private User user; // The associated User for this Member profile
 
     // Default constructor (required by JPA)
     public Member() {
@@ -87,4 +97,8 @@ public class Member {
     public void setMembershipExpiryDate(LocalDate membershipExpiryDate) {
         this.membershipExpiryDate = membershipExpiryDate;
     }
+
+    // If you added the bidirectional user field:
+    // public User getUser() { return user; }
+    // public void setUser(User user) { this.user = user; }
 }
